@@ -7,7 +7,7 @@ from thermal_1d import generate_toy_power_map, solve_1d_channel
 from nozzle import nozzle_isentropic
 from utils import R_spec
 
-def load_params(path="src/params.yaml"):
+def load_params(path="src\params.yaml"):
     with open(path, 'r') as f:
         params = yaml.safe_load(f)
     # Convert numeric params to float to avoid UFuncNoLoopError
@@ -137,5 +137,5 @@ if __name__ == "__main__":
     out = run_sim(params)
     print("Single simulation done:", out)
     # Run batch sim with CSV
-    results = run_batch_sim()
-    print("Batch simulation done:", len(results), "reactors processed")
+    # results = run_batch_sim()
+    # print("Batch simulation done:", len(results), "reactors processed")
