@@ -1,12 +1,1 @@
 numpy
-pandas
-matplotlib
-seaborn
-plotly
-streamlit
-jupyterlab
-black
-pytest
-cantera 
-pyyaml
-pytest
