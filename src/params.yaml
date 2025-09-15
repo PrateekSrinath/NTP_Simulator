@@ -1,4 +1,4 @@
-# sample parameters (edit with values from your papers)
+# Sample parameters (edit with values from your papers or use CSV)
 total_power: 5e6 # W, reactor thermal power (example)
 inlet_temperature: 300 # K
 inlet_pressure: 3e6 # Pa

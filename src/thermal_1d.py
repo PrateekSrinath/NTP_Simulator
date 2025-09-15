@@ -2,16 +2,9 @@
 import numpy as np
 
 def generate_toy_power_map(total_power, core_length, n_slices):
-    """
-    Make a simple axial (Gaussian) power distribution normalized to total_power.
-    Returns q_i (W per slice) array length n_slices.
-    """
     x = np.linspace(0, core_length, n_slices)
-    # center-peaked Gaussian
-    center = core_length / 2.0
-    sigma = core_length / 5.0
-    profile = np.exp(-0.5 * ((x - center)/sigma)**2)
-    profile /= profile.sum()
+    # example linear power fraction along core
+    profile = np.linspace(0.1, 1.0, n_slices, dtype=float)  # Explicit float dtype
     q = profile * total_power
     return q, x
 
