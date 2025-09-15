@@ -1,0 +1,18 @@
+# sample parameters (edit with values from your papers)
+total_power: 5e6 # W, reactor thermal power (example)
+inlet_temperature: 300 # K
+inlet_pressure: 3e6 # Pa
+mass_flow_guess: 0.5 # kg/s (initial)
+nozzle:
+  area_throat: 0.001 # m^2 (example)
+  area_exit: 0.01 # m^2
+geometry:
+  core_length: 1.0 # m (example)
+  n_slices: 20
+materials:
+  inconel718_Tmax: 1000 # K (example; replace with real)
+properties:
+  cp: 14000 # J/kg-K (toy avg; use Cantera for accuracy)
+  gamma: 1.35
+  molar_mass: 0.002 # kg/mol (H2)
+  eta_abs: 0.9 # fraction of power absorbed by propellant
