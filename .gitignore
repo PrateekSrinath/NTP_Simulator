@@ -1,20 +1,11 @@
-@"
-# Python
 __pycache__/
 *.py[cod]
 *.so
 *.egg-info/
 dist/
 build/
-
-# Virtual environment
 venv/
-
-# IDE stuff
 .vscode/
 .idea/
-
-# OS stuff
 .DS_Store
 Thumbs.db
-"@ > .gitignore
