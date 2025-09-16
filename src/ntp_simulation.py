@@ -1,16 +1,13 @@
-# main orchestrator: reads params or CSV, runs toy sim, saves plots
 import yaml
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from thermal_1d import generate_toy_power_map, solve_1d_channel
 from nozzle import nozzle_isentropic
-from utils import R_spec
 
-def load_params(path="src\params.yaml"):
+def load_params(path="src/params.yaml"):
     with open(path, 'r') as f:
         params = yaml.safe_load(f)
-    # Convert numeric params to float to avoid UFuncNoLoopError
     try:
         params['total_power'] = float(params['total_power'])
         params['inlet_temperature'] = float(params['inlet_temperature'])
@@ -30,7 +27,7 @@ def load_params(path="src\params.yaml"):
     return params
 
 def run_sim(params):
-    total_power = params['total_power'] * params['properties']['eta_abs']  # Apply absorption efficiency
+    total_power = params['total_power'] * params['properties']['eta_abs']
     inlet_T = params['inlet_temperature']
     inlet_P = params['inlet_pressure']
     m_dot = params['mass_flow_guess']
@@ -44,8 +41,8 @@ def run_sim(params):
 
     power_map, x = generate_toy_power_map(total_power, core_length, n_slices)
     T_gas, T_wall = solve_1d_channel(power_map, m_dot, cp, inlet_T)
-    T_stag = T_gas[-1]  # assume chamber stagnation equals outlet gas
-    P_stag = inlet_P  # pressure drop simplified to zero in this toy model
+    T_stag = T_gas[-1]
+    P_stag = inlet_P
 
     v_e, Isp, thrust = nozzle_isentropic(T_stag, P_stag, m_dot, props,
                                         Pe=101325.0, Pa=101325.0,
@@ -77,14 +74,13 @@ def run_batch_sim(csv_path="data/reactors.csv"):
     try:
         df = pd.read_csv(csv_path)
     except FileNotFoundError:
-        raise FileNotFoundError(f"CSV file {csv_path} not found. Please create it with reactor parameters.")
+        raise FileNotFoundError(f"CSV file {csv_path} not found.")
     
     results = []
     for idx, row in df.iterrows():
-        # Convert CSV row to params dict matching YAML structure
         params = {
             'reactor_name': row['reactor_name'],
-            'total_power': float(row['total_power_MW']) * 1e6,  # MW to W
+            'total_power': float(row['total_power_MW']) * 1e6,
             'inlet_temperature': float(row['inlet_temperature_K']),
             'inlet_pressure': float(row['inlet_pressure_Pa']),
             'mass_flow_guess': float(row['mass_flow_kg_s']),
@@ -110,7 +106,6 @@ def run_batch_sim(csv_path="data/reactors.csv"):
         plot_results(out['x'], out['T_gas'], out['T_wall'], out['Isp'], out['thrust'], out['reactor_name'])
         results.append(out)
 
-    # Batch comparison plot
     plt.figure(figsize=(10,6))
     for res in results:
         plt.plot(res['x'], res['T_gas'], label=f"{res['reactor_name']} (Isp={res['Isp']:.1f} s)")
@@ -123,7 +118,6 @@ def run_batch_sim(csv_path="data/reactors.csv"):
     plt.savefig('figures/comparison_T_gas.png', dpi=300)
     plt.close()
 
-    # Save summary
     summary_df = pd.DataFrame([
         {'reactor_name': res['reactor_name'], 'Isp': res['Isp'], 'thrust': res['thrust']}
         for res in results
@@ -132,10 +126,6 @@ def run_batch_sim(csv_path="data/reactors.csv"):
     return results
 
 if __name__ == "__main__":
-    # Run single sim with YAML (for testing)
     params = load_params()
     out = run_sim(params)
     print("Single simulation done:", out)
-    # Run batch sim with CSV
-    # results = run_batch_sim()
-    # print("Batch simulation done:", len(results), "reactors processed")
