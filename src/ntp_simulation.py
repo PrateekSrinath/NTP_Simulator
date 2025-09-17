@@ -1,3 +1,4 @@
+import os
 import yaml
 import numpy as np
 import pandas as pd
@@ -44,9 +45,11 @@ def run_sim(params):
     T_stag = T_gas[-1]
     P_stag = inlet_P
 
-    v_e, Isp, thrust = nozzle_isentropic(T_stag, P_stag, m_dot, props,
-                                        Pe=101325.0, Pa=101325.0,
-                                        Ae=params['nozzle']['area_exit'])
+    v_e, Isp, thrust = nozzle_isentropic(
+        T_stag, P_stag, m_dot, props,
+        Pe=101325.0, Pa=101325.0,
+        Ae=params['nozzle']['area_exit']
+    )
 
     return {
         'x': x.tolist(),
@@ -57,7 +60,10 @@ def run_sim(params):
         'reactor_name': params.get('reactor_name', 'default')
     }
 
-def plot_results(x, T_gas, T_wall, Isp, thrust, reactor_name='default'):
+def plot_results(x, T_gas, T_wall, Isp, thrust, reactor_name='default', show_plot=False):
+    figures_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "figures")
+    os.makedirs(figures_dir, exist_ok=True)
+
     plt.figure(figsize=(8,4))
     plt.plot(x, T_gas, label='T_gas (K)')
     plt.plot(x, T_wall, label='T_wall (K)')
@@ -67,17 +73,23 @@ def plot_results(x, T_gas, T_wall, Isp, thrust, reactor_name='default'):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(f'figures/{reactor_name}_T_profile.png', dpi=300)
+
+    save_path = os.path.join(figures_dir, f"{reactor_name}_T_profile.png")
+    plt.savefig(save_path, dpi=300)
+    if show_plot:
+        plt.show()   # display inline in notebook
     plt.close()
 
-def run_batch_sim(csv_path="data/reactors.csv"):
+def run_batch_sim(csv_path="data/reactors.csv", show_plots=False):
+    # Load CSV
     try:
         df = pd.read_csv(csv_path)
     except FileNotFoundError:
         raise FileNotFoundError(f"CSV file {csv_path} not found.")
-    
+
     results = []
     for idx, row in df.iterrows():
+        # Build params dict for each reactor
         params = {
             'reactor_name': row['reactor_name'],
             'total_power': float(row['total_power_MW']) * 1e6,
@@ -102,11 +114,26 @@ def run_batch_sim(csv_path="data/reactors.csv"):
                 'eta_abs': float(row['eta_abs'])
             }
         }
+
+        # Run simulation
         out = run_sim(params)
-        plot_results(out['x'], out['T_gas'], out['T_wall'], out['Isp'], out['thrust'], out['reactor_name'])
+
+        # Plot results for this reactor
+        plot_results(
+            out['x'], out['T_gas'], out['T_wall'],
+            out['Isp'], out['thrust'],
+            out['reactor_name'],
+            show_plot=show_plots
+        )
+
         results.append(out)
 
-    plt.figure(figsize=(10,6))
+    # Summary plot
+    figures_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "figures")
+    os.makedirs(figures_dir, exist_ok=True)
+
+    if show_plots:
+        plt.figure(figsize=(10,6))
     for res in results:
         plt.plot(res['x'], res['T_gas'], label=f"{res['reactor_name']} (Isp={res['Isp']:.1f} s)")
     plt.xlabel('Axial position (m)')
@@ -115,17 +142,27 @@ def run_batch_sim(csv_path="data/reactors.csv"):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('figures/comparison_T_gas.png', dpi=300)
+
+    summary_plot_path = os.path.join(figures_dir, 'comparison_T_gas.png')
+    plt.savefig(summary_plot_path, dpi=300)
+    if show_plots:
+        plt.show()
     plt.close()
 
+    # Build summary dataframe
     summary_df = pd.DataFrame([
         {'reactor_name': res['reactor_name'], 'Isp': res['Isp'], 'thrust': res['thrust']}
         for res in results
     ])
-    summary_df.to_csv('data/simulation_results.csv', index=False)
-    return results
+
+    # Save summary CSV
+    summary_csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "simulation_results.csv")
+    summary_df.to_csv(summary_csv_path, index=False)
+
+    return results, summary_df
 
 if __name__ == "__main__":
-    params = load_params()
+    params_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "params.yaml")
+    params = load_params(params_path)
     out = run_sim(params)
     print("Single simulation done:", out)
