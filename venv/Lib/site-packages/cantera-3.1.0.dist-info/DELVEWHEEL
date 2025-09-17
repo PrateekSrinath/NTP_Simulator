@@ -1,0 +1,2 @@
+Version: 1.9.0
+Arguments: ['C:\\Users\\runneradmin\\AppData\\Local\\Temp\\cibw-run-h5mtewhm\\cp312-win_amd64\\build\\venv\\Scripts\\delvewheel', 'repair', '--add-path', 'D:\\a\\pypi-packages\\pypi-packages/cache/hdf5/1.14.5\\bin;D:\\a\\pypi-packages\\pypi-packages/cache/sundials/7.1.1\\bin', '-w', 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\cibw-run-h5mtewhm\\cp312-win_amd64\\repaired_wheel', 'C:\\Users\\runneradmin\\AppData\\Local\\Temp\\cibw-run-h5mtewhm\\cp312-win_amd64\\built_wheel\\cantera-3.1.0-cp312-cp312-win_amd64.whl']
