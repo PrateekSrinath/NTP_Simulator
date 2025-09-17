@@ -13,11 +13,11 @@ The project focuses on:
 ---
 
 ## Team Members
-Raj Tibarewala
-Prateek Srinath
-Anvita
-Khushi
-Rashi Jha
-Rishmitha
+- Raj Tibarewala
+- Prateek Srinath
+- Anvita
+- Khushi
+- Rashi Jha
+- Rishmitha
 
 ---

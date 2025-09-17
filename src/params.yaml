@@ -1,0 +1,17 @@
+total_power: 5000000.0
+inlet_temperature: 300.0
+inlet_pressure: 3000000.0
+mass_flow_guess: 0.5
+nozzle:
+  area_throat: 0.001
+  area_exit: 0.01
+geometry:
+  core_length: 1.0
+  n_slices: 20
+materials:
+  inconel718_Tmax: 1000.0
+properties:
+  cp: 14000.0
+  gamma: 1.35
+  molar_mass: 0.002
+  eta_abs: 0.9

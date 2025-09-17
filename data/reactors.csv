@@ -1,0 +1,6 @@
+reactor_name,total_power_MW,inlet_temperature_K,inlet_pressure_Pa,mass_flow_kg_s,core_length_m,n_slices,area_throat_m2,area_exit_m2,inconel718_Tmax_K,cp_J_kg_K,gamma,molar_mass_kg_mol,eta_abs
+Large_NERVA,555,300,3.00E+06,12.68,1.321,100,0.001,0.01,1000,14000,1.35,0.002,0.9
+Pewee_1,500,300,3.00E+06,10,1,100,0.001,0.01,1000,14000,1.35,0.002,0.9
+Phoebus_2A,4000,300,3.00E+06,40,1.5,150,0.002,0.02,1000,14000,1.35,0.002,0.9
+NRX_A6,1100,300,3.00E+06,15,1.2,120,0.0015,0.015,1000,14000,1.35,0.002,0.9
+Particle_Bed_Reactor,1000,300,3.00E+06,5,0.5,80,0.0008,0.008,1000,14000,1.35,0.002,0.9
